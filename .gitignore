@@ -1,0 +1,11 @@
+# Go environment
+/bin/
+/pkg/
+/vendor/
+/data/
+
+# Log files
+*.log
+
+# macOS
+.DS_Store
