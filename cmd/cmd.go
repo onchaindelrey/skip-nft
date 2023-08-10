@@ -24,12 +24,14 @@ const (
 	collectionNftCount = "collection-nft-count"
 	collectionName     = "collection-name"
 	maxProcessThreads  = "max-process-threads"
+	baseUrl            = "base-url"
 )
 
 var (
 	collectionNameDefault = "azuki1"
 	collectionNftCountVal = 10000
 	maxProcessThreadsVal  = 50
+	baseUrlValueDefault   = "https://go-challenge.skip.money"
 
 	Logger *log.Logger = log.New(os.Stdout, "", log.Ldate|log.Ltime)
 
@@ -48,6 +50,7 @@ var (
 
 func init() {
 	rootCmd.PersistentFlags().StringVarP(&collectionNameDefault, collectionName, "n", "azuki1", "Name of the collection")
+	rootCmd.PersistentFlags().StringVarP(&baseUrlValueDefault, baseUrl, "u", "https://go-challenge.skip.money", "Source url of the NFT collection")
 	rootCmd.PersistentFlags().IntVarP(&collectionNftCountVal, collectionNftCount, "c", 10000, "Number of NFT's in the given collections")
 	rootCmd.PersistentFlags().IntVarP(&maxProcessThreadsVal, maxProcessThreads, "t", 50, "Maximum number of parallel threads")
 }
@@ -66,12 +69,17 @@ func runCollectionProcessor(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
+	baseColUrl, err := cmd.Flags().GetString(baseUrl)
+	if err != nil {
+		return err
+	}
+
 	collectionNftCount, err := cmd.Flags().GetInt(collectionNftCount)
 	if err != nil {
 		return err
 	}
 
-	var processThreads = 10
+	var processThreads = 50
 
 	maxThreads, err := cmd.Flags().GetInt(maxProcessThreads)
 	if err != nil {
@@ -85,6 +93,7 @@ func runCollectionProcessor(cmd *cobra.Command, args []string) error {
 	azuki := collection.Collection{
 		Count:             collectionNftCount,
 		Name:              name,
+		BaseUrl:           baseColUrl,
 		Tokens:            make([]*collection.Token, collectionNftCount),
 		TraitsList:        make(map[string][]string),
 		TokenRarityScores: make([]collection.RarityScorecard, collectionNftCount),

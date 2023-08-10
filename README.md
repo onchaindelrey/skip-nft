@@ -21,5 +21,7 @@ Execution options:
 
 --collection-nft-count: number of NFTs in the collection to be processed. Default is 10000
 
+--base-url: source url for the NFT collection. Default is https://go-challenge.skip.money
+
 ```
 

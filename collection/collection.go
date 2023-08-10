@@ -22,16 +22,15 @@ var Logger *log.Logger = log.New(os.Stdout, "", log.Ldate|log.Ltime)
 type Collection struct {
 	Mutex             sync.RWMutex
 	Count             int
+	BaseUrl           string
 	Name              string
 	TraitsList        map[string][]string
 	Tokens            []*Token
 	TokenRarityScores []RarityScorecard
 }
 
-const URL = "https://go-challenge.skip.money"
-
 func (col *Collection) fetchToken(tid int, colUrl string) *Token {
-	url := fmt.Sprintf("%s/%s/%d.json", URL, colUrl, tid)
+	url := fmt.Sprintf("%s/%s/%d.json", col.BaseUrl, colUrl, tid)
 	res, err := http.Get(url)
 	if err != nil {
 		Logger.Println(string(COLOR_RED), fmt.Sprintf("Error getting token %d :", tid), err, string(COLOR_RESET))
